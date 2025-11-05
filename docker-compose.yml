@@ -1,0 +1,74 @@
+version: '3'
+services:
+  # PostgreSQL database for Umami
+  db:
+    image: postgres:15-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: umami
+      POSTGRES_USER: umami
+      POSTGRES_PASSWORD: umami
+    volumes:
+      - umami-db-data:/var/lib/postgresql/data
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U umami"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Umami Analytics
+  umami:
+    image: ghcr.io/umami-software/umami:postgresql-latest
+    ports:
+      - "3002:3000"
+    environment:
+      DATABASE_URL: postgresql://umami:umami@db:5432/umami
+      DATABASE_TYPE: postgresql
+      APP_SECRET: replace-me-with-a-random-string
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/api/heartbeat || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # MongoDB for GrowthBook
+  mongo:
+    image: mongo:7
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    volumes:
+      - mongo-data:/data/db
+    restart: always
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # GrowthBook A/B Testing
+  growthbook:
+    image: growthbook/growthbook:latest
+    ports:
+      - "3100:3000"
+      - "3101:3100"
+    environment:
+      MONGODB_URI: mongodb://root:password@mongo:27017/growthbook?authSource=admin
+      APP_ORIGIN: http://localhost:3100
+      API_HOST: http://localhost:3101
+      JWT_SECRET: replace-me-with-another-random-string
+      ENCRYPTION_KEY: replace-me-with-encryption-key-32-chars-long
+    depends_on:
+      mongo:
+        condition: service_healthy
+    restart: always
+
+volumes:
+  umami-db-data:
+  mongo-data:
