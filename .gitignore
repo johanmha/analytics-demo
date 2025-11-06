@@ -31,3 +31,10 @@ dist-ssr
 # Docker volumes
 umami-db-data/
 growthbook-db-data/
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/

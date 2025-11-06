@@ -13,7 +13,7 @@ export const Landing: React.FC = () => {
   const heroVariant = useFeatureValue<'control' | 'variant'>('hero-test', 'control');
   const buttonTextVariant = heroVariant === 'variant' ? 'Explore Features' : 'View Product';
   const handleCTA = () => {
-    track(`funnel_hero_click_${heroVariant}`, {
+    track(`hero_click_${heroVariant}`, {
       location: 'hero',
       button_text: buttonTextVariant,
     });
