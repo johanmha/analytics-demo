@@ -4,7 +4,6 @@ export class AnalyticsFunnel {
   constructor(private readonly page: Page) {}
 
   async step1_clickHeroButton() {
-    // Clear storage to ensure fresh GrowthBook session ID for each test run
     await this.page.context().clearCookies();
     await this.page.goto('/');
     await this.page.evaluate(() => {
@@ -12,7 +11,6 @@ export class AnalyticsFunnel {
       sessionStorage.clear();
     });
 
-    // Reload to initialize new GrowthBook session with cleared storage
     await this.page.reload();
 
     await this.page

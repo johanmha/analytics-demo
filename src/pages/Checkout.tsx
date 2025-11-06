@@ -16,14 +16,12 @@ export const Checkout: React.FC = () => {
     e.preventDefault();
     setIsProcessing(true);
 
-    // Track conversion
     track('purchase_complete', {
       value: 29,
       currency: 'USD',
       product: 'Analytics Pro Plan',
     });
 
-    // Simulate processing
     setTimeout(() => {
       setIsProcessing(false);
       alert('Purchase successful! (This is a demo)');
