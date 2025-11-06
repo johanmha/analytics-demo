@@ -25,15 +25,54 @@ Complete guide to connect GrowthBook to Umami for automated A/B test analysis.
 **Navigation:** Data Sources → Umami → Identifier Types
 
 1. Click **"Add Identifier"**
-2. **Key:** `visit_id`
-3. **Description:** `Umami visit identifier (one per page visit)`
+2. **Key:** `hero_event_id`
+3. **Description:** `Hero event identifier (one user per hero button click)`
 4. Click **Save**
 
-**Why hero_event_id?** base on hero_event_id to simulate one user per hero button click.
+**Why hero_event_id?** Uses hero_event_id to simulate one user per hero button click for local testing. In production, you would use session_id instead.
 
 ---
 
-## Step 3: Create the Fact Table
+## Step 3: Add Experiment Assignment Query
+
+**Navigation:** Data Sources → Umami → Experiment Assignment Queries
+
+This query tells GrowthBook which variation each user was assigned to.
+
+1. Click **"Add Assignment Query"**
+2. **Query Name:** `Hero Test Assignments`
+3. **SQL Query:**
+
+```sql
+SELECT
+  event_id as hero_event_id,
+  created_at as timestamp,
+  'hero-test' as experiment_id,
+  CASE
+    WHEN event_name = 'hero_click_control' THEN 'control'
+    WHEN event_name = 'hero_click_variant' THEN 'variant'
+  END as variation_id
+FROM
+  website_event
+WHERE
+  website_id = '817bcb3e-1a56-4273-9ed2-ae7aeda45fb9'
+  AND event_name IN ('hero_click_control', 'hero_click_variant')
+  AND event_type = 2
+  AND created_at >= '{{ startDate }}'::timestamptz
+  AND created_at <= '{{ endDate }}'::timestamptz
+```
+
+4. **Column Mappings:**
+
+   - **Identifier Type:** `hero_event_id` (must match the identifier type from Step 2)
+
+5. Click **Save** → **Run Query** to verify
+
+**Important:** Replace `website_id` value with your actual Website ID from `.env` (VITE_UMAMI_WEBSITE_ID)
+
+---
+
+## Step 4: Create the Fact Table
 
 **Navigation:** Settings → Fact Tables → Create Fact Table
 
@@ -97,8 +136,8 @@ Complete guide to connect GrowthBook to Umami for automated A/B test analysis.
 ### Column Mappings:
 
 - **Identifier Column:** `id`
-- **User ID Column:** `user_id`
-  - **Identifier Type:** `visit_id`
+- **User ID Column:** `hero_event_id`
+  - **Identifier Type:** `hero_event_id`
 - **Timestamp Column:** `timestamp`
 
 ### Filters (Optional):
@@ -111,7 +150,7 @@ Click **Save** → **Preview Data** to verify it works.
 
 ---
 
-## Step 4: Create Metrics
+## Step 5: Create Metrics
 
 **Navigation:** Settings → Metrics → Create Metric
 

@@ -56,7 +56,7 @@ Wait 30 seconds for services to initialize.
 
 For **automated statistical analysis** and real-time experiment results:
 
-**See [docs/GROWTHBOOK_FACT_TABLE.md](./docs/GROWTHBOOK_FACT_TABLE.md)** for complete setup guide
+**See [docs/growthbook-integration.md](./docs/growthbook-integration.md)** for complete setup guide
 
 This enables:
 
@@ -107,4 +107,4 @@ Visit **http://localhost:5173**
 
 ### Documentation
 
-- [GrowthBook Fact Table Integration](./docs/GROWTHBOOK_FACT_TABLE.md) - Complete guide to connect GrowthBook to Umami for automated A/B test analysis
+- [GrowthBook Integration Guide](./docs/growthbook-integration.md) - Complete guide to connect GrowthBook to Umami for automated A/B test analysis
