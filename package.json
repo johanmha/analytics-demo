@@ -11,13 +11,13 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "check": "npm run typecheck && npm run lint",
-    "test": "playwright test tests/*.spec.ts",
-    "test:debug": "playwright test --debug",
-    "test:ui": "playwright test --ui",
-    "test:analytics": "REPEAT_EACH=10 playwright test tests/*.spec.ts",
-    "test:analytics:50": "REPEAT_EACH=50 playwright test tests/*.spec.ts",
-    "test:analytics:100": "REPEAT_EACH=100 playwright test tests/*.spec.ts",
-    "test:analytics:1000": "REPEAT_EACH=1000 playwright test tests/*.spec.ts"
+    "traffic": "playwright test traffic-generator/*.spec.ts",
+    "traffic:debug": "playwright test --debug",
+    "traffic:ui": "playwright test --ui",
+    "traffic:generate": "REPEAT_EACH=10 playwright test traffic-generator/*.spec.ts",
+    "traffic:generate:50": "REPEAT_EACH=50 playwright test traffic-generator/*.spec.ts",
+    "traffic:generate:100": "REPEAT_EACH=100 playwright test traffic-generator/*.spec.ts",
+    "traffic:generate:1000": "REPEAT_EACH=1000 playwright test traffic-generator/*.spec.ts"
   },
   "dependencies": {
     "@growthbook/growthbook-react": "^1.6.2",
